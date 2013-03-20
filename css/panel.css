@@ -1,0 +1,153 @@
+body{
+	height: 100%;
+	margin: 0;
+	background-color: #EEEEEE;
+}
+.nodata{
+	text-align: center;
+	margin: 20px auto 0 auto;
+	font-size: 18px;
+	font-weight: bold;
+	color: #ff0000;
+}
+#data-block{
+	height: 100%;
+}
+#menu-wrapper{
+	height: 100%;
+	float: left;
+	width: 20%;
+}
+#menu{
+	overflow: hidden;
+	padding-left: 10px;
+	list-style-type: none;
+	cursor: pointer;
+}
+#menu li.active{
+	background-color: #999;
+}
+#content{
+	padding: 5px;
+	height: 100%;
+	float: right;
+	width: 80%;
+}
+
+/* Content Tables styles */
+#content,
+#content span,
+#content pre,
+#content h1,
+#content img,
+#content a,
+#content ul,
+#content li,
+#content table,
+#content tr,
+#content td,
+#content th {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: middle;
+	background: transparent;
+	line-height: 1;
+	text-transform: none;
+	font-size:100%;
+}
+#content table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	padding: 3px;
+	font-size: 11px;
+	border: 1px solid #999;
+	width: 99%;
+	margin:20px 5px;
+	font-family: monospace;
+}
+#content td {
+	padding: 3px 3px;
+	vertical-align: top;
+	background-color: #eee;
+}
+#content tr.odd td {
+	background-color: #ddd;
+}
+#content th {
+	padding: 3px 5px;
+	vertical-align: top;
+	background-color: #999;
+	color: #eee;
+	white-space: nowrap;
+}
+#content td,
+#content th {
+	border: 1px solid #efefef;
+}
+#content tr.current {
+	font-weight: bold;
+}
+
+/* vars list */
+#content .vars pre {
+	background-color: #ddd;
+	padding: 5px;
+	color: #333;
+}
+#content .varmenu {
+	margin: 20px 0 0 0;
+	height: 23px;
+}
+#content .varmenu li {
+	float: left;
+	display: block;
+	padding: 5px;
+	margin: 0 6px 0 5px;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
+	cursor:  pointer;
+	background-color: #efefef;
+}
+#content .vars div{
+	margin-left: 5px;
+}
+#content .varmenu li.active {
+	background-color: #ddd;
+	color: #000;
+}
+
+/* Customs */
+#content .customs {
+	padding: 3px 0px;
+}
+#content .customs pre {
+	background-color: #ddd;
+	padding: 5px;
+	color: #333;
+}
+#content .customs .sectionmenu {
+	margin: 20px 0 0 5px;
+	height: 23px;
+}
+#content .customs div{
+	margin-left: 5px;
+}
+#content .customs .sectionmenu li {
+	float: left;
+	display: block;
+	padding: 5px;
+	margin: 0 6px 0 0;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
+	cursor: pointer;
+	background-color: #efefef;
+}
+#content .customs .sectionmenu li.active {
+	background-color: #ddd;
+	color: #000;
+}

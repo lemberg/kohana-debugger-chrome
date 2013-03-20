@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+
+	"name": "Kohana DebugTool",
+	"description": "This extension allows to integrate Kohana DebugTool module with Google Chrome.",
+	"version": "0.1",
+	"devtools_page": "debug-tool.html",
+	"content_scripts":[{
+		"matches": ["http://*/*", "https://*/*"],
+		"js": ["js/mootools-core.js", "js/config.js", "js/content.js"]
+	}],
+	"permissions": [
+		//"experimental",
+		"tabs",
+		"http://*/*",
+		"https://*/*"
+	],
+	"background":{
+		"scripts" : ["js/background.js"]
+	}
+}
