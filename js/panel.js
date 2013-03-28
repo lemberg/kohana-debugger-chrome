@@ -2,41 +2,57 @@ var tabId = chrome.devtools.inspectedWindow.tabId;
 var port = chrome.extension.connect({
 	name: "Kohana DebugTool"
 });
+var requestsIndex = 0;
 
 port.postMessage({});
 
 port.onMessage.addListener(function (msg) {
 	if (tabId != msg.tabId) return;
-	renderPage(msg.content);
+	addTab(msg.content);
 });
 
-function renderPage(msg){
+function addTab(msg){
+	$('data-block').setStyle('display', 'block');
+	$('errors-block').setStyle('display', 'none');
+	var menu = $$('#requests .menu')[0];
+	var itemsCount = menu.getElements('li').length;
+	var newTab = $$('#requests-info-wrapper .clone')[0].clone();
+	var tabSelector = 'request-' + (++requestsIndex);
+	if (itemsCount == 0){
+		newTab.setStyle('display', 'block');
+	}
+	newTab.inject($('requests-info-wrapper'));
+	newTab.addClass(tabSelector);
+	var menuItem = new Element('li', {
+		'class': (itemsCount == 0) ? 'active' : '',
+		'tab-selector': tabSelector,
+		html: "Request " + (requestsIndex) + "<div class=\"delete\"></div>"
+	});
+	menuItem.inject(menu);
 	if (msg.errors.length){
 		var errors = msg.errors;
-		$('data-block').setStyle('display', 'none');
-		$('errors-block').set('html', '');
+		newTab.set('html', '');
+		newTab.addClass('nodata');
 		for (var i = 0; i < errors.length; i++){
 			var block = new Element('div', {
 				html: errors[i]
 			});
-			block.inject('errors-block');
+			block.inject(newTab);
 		}
-		$('errors-block').setStyle('display', 'block');
 
 		return false;
 	}
-	$('data-block').setStyle('display', 'block');
-	$('errors-block').setStyle('display', 'none');
 	var configs = getConfigs();
 	var menuItems = configs.menu_items;
-	generateMenu(menuItems);
-	updateBlocks(menuItems, msg.data);
+	generateMenu(newTab, menuItems);
+	generateBlocks(newTab, menuItems, msg.data);
 
 	return true;
 }
 
-function generateMenu(menuItems){
-	$('menu').set('html', '');
+function generateMenu(element, menuItems){
+	var menu = element.getElements('.menu')[0];
+	menu.set('html', '');
 	for (var i = 0; i < menuItems.length; i++){
 		var li = new Element('li', {
 			html: menuItems[i].name
@@ -45,36 +61,36 @@ function generateMenu(menuItems){
 		if (i == 0){
 			li.addClass('active');
 		}
-		li.inject('menu');
+		li.inject(menu);
 	}
 	return true;
 }
 
-function updateBlocks(items, data){
+function generateBlocks(element, items, data){
 	for (var i = 0; i < items.length; i++){
-		$$("#content ." + items[i].key).set('html', '');
+		element.getElements(".content ." + items[i].key).set('html', '');
 		if (typeof data[items[i].key] != 'undefined'){
 			switch (items[i].key){
-				case 'benchmarks': updateBenchmarks(data[items[i].key]); break;
-				case 'queries': updateQueries(data[items[i].key]); break;
-				case 'vars': updateVars(data[items[i].key]); break;
-				case 'files': updateFiles(data[items[i].key]); break;
-				case 'modules': updateModules(data[items[i].key]); break;
-				case 'routes': updateRoutes(data[items[i].key]); break;
-				case 'customs': updateCustoms(data[items[i].key]); break;
+				case 'benchmarks': generateBenchmarks(element, data[items[i].key]); break;
+				case 'queries': generateQueries(element, data[items[i].key]); break;
+				case 'vars': generateVars(element, data[items[i].key]); break;
+				case 'files': generateFiles(element, data[items[i].key]); break;
+				case 'modules': generateModules(element, data[items[i].key]); break;
+				case 'routes': generateRoutes(element, data[items[i].key]); break;
+				case 'customs': generateCustoms(element, data[items[i].key]); break;
 			}
 
-			$$("#content .item-block").setStyle('display', 'none');
-			$$($$("#content .item-block")[0]).setStyle('display', 'block');
+			element.getElements(".content .item-block").setStyle('display', 'none');
+			$$(element.getElements(".content .item-block")[0]).setStyle('display', 'block');
 		}
 		else{
-			$$("#content ." + items[i].key).set('html', '<div class=\"nodata\">No Data for this tab</div>');
+			element.getElements(".content ." + items[i].key).set('html', '<div class=\"nodata\">No Data for this tab</div>');
 		}
 	}
 }
 
-function updateBenchmarks(data){
-	var block = $$("#content .benchmarks")[0];
+function generateBenchmarks(element, data){
+	var block = element.getElements(".content .benchmarks")[0];
 	var table = new Element('table', {
 		"cellspacing": 0,
 		"cellpadding": 0
@@ -125,8 +141,8 @@ function updateBenchmarks(data){
 	}
 }
 
-function updateQueries(data){
-	var block = $$("#content .queries")[0];
+function generateQueries(element, data){
+	var block = element.getElements(".content .queries")[0];
 	var table = new Element('table', {
 		"cellspacing": 0,
 		"cellpadding": 0
@@ -189,8 +205,8 @@ function updateQueries(data){
 	}
 }
 
-function updateVars(data){
-	var block = $$("#content .vars")[0];
+function generateVars(element, data){
+	var block = element.getElements(".content .vars")[0];
 	var ul = new Element('ul', {
 		html: "<li class=\"active\" vars-name=\"post\">POST</li>" +
 				"<li vars-name=\"get\">GET</li>" +
@@ -210,17 +226,16 @@ function updateVars(data){
 			style = "";
 		}
 		var div = new Element("div", {
-			"class": "var-item",
+			"class": "var-item vars-" + i,
 			style: style,
 			html: data[i],
-			id: "vars-" + i
 		});
 		div.inject(block);
 	}
 }
 
-function updateFiles(data){
-	var block = $$("#content .files")[0];
+function generateFiles(element, data){
+	var block = element.getElements(".content .files")[0];
 	var table = new Element('table', {
 		"cellspacing": 0,
 		"cellpadding": 0
@@ -257,8 +272,8 @@ function updateFiles(data){
 	tr.inject(tbody);
 }
 
-function updateModules(data){
-	var block = $$("#content .modules")[0];
+function generateModules(element, data){
+	var block = element.getElements(".content .modules")[0];
 	var table = new Element('table', {
 		"cellspacing": 0,
 		"cellpadding": 0
@@ -288,8 +303,8 @@ function updateModules(data){
 	}
 }
 
-function updateRoutes(data){
-	var block = $$("#content .routes")[0];
+function generateRoutes(element, data){
+	var block = element.getElements(".content .routes")[0];
 	var table = new Element('table', {
 		"cellspacing": 0,
 		"cellpadding": 0
@@ -318,9 +333,8 @@ function updateRoutes(data){
 	}
 }
 
-
-function updateCustoms(data){
-	var block = $$("#content .customs")[0];
+function generateCustoms(element, data){
+	var block = element.getElements(".content .customs")[0];
 	var ul = new Element('ul', {
 		"class": "sectionmenu"
 	});
@@ -332,9 +346,9 @@ function updateCustoms(data){
 		if (counter == 0){
 			style = '';
 		}
-		var tabId = 'customs-' + counter++;
+		var tabSelector = 'customs-' + counter++;
 		var li = new Element('li', {
-			"tab-id": tabId,
+			"tab-selector": tabSelector,
 			html: tab
 		});
 		if (counter - 1 == 0){
@@ -344,7 +358,7 @@ function updateCustoms(data){
 
 		var div = new Element('div', {
 			style: style,
-			id: tabId,
+			'class': tabSelector,
 			html: "<pre>" + data[tab] + "</pre>"
 		});
 		div.inject(block);

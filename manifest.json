@@ -10,7 +10,6 @@
 		"js": ["js/mootools-core.js", "js/config.js", "js/content.js"]
 	}],
 	"permissions": [
-		//"experimental",
 		"tabs",
 		"http://*/*",
 		"https://*/*"
