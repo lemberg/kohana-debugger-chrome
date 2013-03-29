@@ -30,6 +30,10 @@ function getConfigs(){
 			{
 				name: "Customs",
 				key: "customs"
+			},
+			{
+				name: "Logs",
+				key: "logs"
 			}
 		]
 	};

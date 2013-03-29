@@ -78,6 +78,7 @@ function generateBlocks(element, items, data){
 				case 'modules': generateModules(element, data[items[i].key]); break;
 				case 'routes': generateRoutes(element, data[items[i].key]); break;
 				case 'customs': generateCustoms(element, data[items[i].key]); break;
+				case 'logs': generateLogs(element, data[items[i].key]); break;
 			}
 
 			element.getElements(".content .item-block").setStyle('display', 'none');
@@ -362,5 +363,20 @@ function generateCustoms(element, data){
 			html: "<pre>" + data[tab] + "</pre>"
 		});
 		div.inject(block);
+	}
+}
+
+function generateLogs(element, data) {
+	var block = element.getElements(".content .logs")[0];
+	if (data.length){
+		for(var i = 0; i < data.length; i++){
+			var log = new Element('div', {
+				html: data[i]
+			});
+			log.inject(block);
+		}
+	}
+	else{
+		block.set('html', '<div class=\"nodata\">Nothing logged</div>');
 	}
 }

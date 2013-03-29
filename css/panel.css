@@ -167,3 +167,9 @@ body{
 	background-color: #ddd;
 	color: #000;
 }
+.content .logs{
+	padding: 10px 0 0 5px;
+}
+.content .logs div{
+	margin-bottom: 15px;
+}
