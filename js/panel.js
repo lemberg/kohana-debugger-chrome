@@ -343,6 +343,9 @@ function generateCustoms(element, data){
 
 	var counter = 0;
 	for (var tab in data){
+		if (!data.hasOwnProperty(tab)) {
+			continue;
+		}
 		var style = 'display: none;';
 		if (counter == 0){
 			style = '';
@@ -363,6 +366,9 @@ function generateCustoms(element, data){
 			html: "<pre>" + data[tab] + "</pre>"
 		});
 		div.inject(block);
+	}
+	if (!counter){
+		block.set('html', "<div class=\"nodata\">no customs</div>");
 	}
 }
 
