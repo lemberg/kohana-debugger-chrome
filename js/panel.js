@@ -72,6 +72,7 @@ document.addEvent('domready', function(){
 	});
 
 	var Block = new Class({
+		Implements: [Events],
 		content: null,
 		elements: {},
 		tabs: {},
@@ -131,12 +132,17 @@ document.addEvent('domready', function(){
 		show: function(){
 			this.content.getParent('.split-view').addClass('split-view-open');
 			this.content.removeClass('hide');
+			this.fireEvent('show');
+
 			return this;
 		},
 
 		hide: function(){
 			this.content.getParent('.split-view').removeClass('split-view-open');
 			this.content.addClass('hide');
+			this.fireEvent('hide');
+
+			return this;
 		}
 	});
 
@@ -169,6 +175,9 @@ document.addEvent('domready', function(){
 			} else if(typeOf(el) == 'object') {
 				el.toElement().inject(this.content.getElement('.text'));
 			}
+
+			var no_data = this.content.getElement('.no_data')
+			if(no_data) no_data.destroy();
 
 			return this;
 		},
@@ -211,6 +220,10 @@ document.addEvent('domready', function(){
 		addBlock: function(data, index){
 			this.blocks[index] = new Block();
 			this.blocks[index].toElement().inject(this.content);
+			this.blocks[index].addEvent('hide', function(){
+				var el = this.content.getElement('td.td-pointer.selected');
+				if(el) el.removeClass('selected');
+			}.bind(this));
 
 			var benchmarksTab = new Tab(new OpenableTable([
 				{name: 'Count', identifier: 'count'},
@@ -225,26 +238,62 @@ document.addEvent('domready', function(){
 					{name: 'Count', identifier: 'count'},
 					{name: 'Time', identifier: 'total_time', callback: function(value){ return value.round(4) + ' s'; }},
 					{name: 'Memory', identifier: 'total_memory', callback: function(value){ return (value / 1024).round(2) + ' KiB'; }},
-				], stats, name.camelCase(), true));
+				], stats, name, true));
 			});
 
 			this.blocks[index].addTab('Banchmarks', benchmarksTab);
 
-			this.blocks[index].addTab('Routes', new Tab(new Table([
-				{name: 'Route', identifier: 'name'},
-				{name: 'Current', identifier: 'current', styles: {width: '100px'}, callback: function(value){ return value ? 'yes' : ''; }},
-			], data.data.routes.list)));
+			if(data.data.queries.count){
+				var queriesTab = new Tab();
 
-			this.blocks[index].addTab('Files', new Tab(new Table([
-				{name: 'Path', identifier: 'name'},
-				{name: 'Lines', identifier: 'lines', styles: {width: '100px'}},
-				{name: 'Size', identifier: 'size', styles: {width: '100px'}, callback: function(value){ return (value / 1024).round(2) + ' KiB'; }},
-			], data.data.files.list)));
+				Object.each(data.data.queries.data, function(database, name){console.log(database, name);
+					queriesTab.add(new OpenableTable([
+						{name: 'Query', identifier: 'name'},
+						{name: 'Time', identifier: 'time', styles: {width: '100px'}, callback: function(value){ return value.round(4) + ' s'; }},
+						{name: 'Memory', identifier: 'memory', styles: {width: '100px'}, callback: function(value){ return (value / 1024).round(2) + ' KiB'; }},
+					], database.list, name, true));
+				}.bind(this));
 
-			this.blocks[index].addTab('Modules', new Tab(new Table([
-				{name: 'Name', identifier: 'name', styles: {width: '150px'}},
-				{name: 'Path', identifier: 'path'}
-			], data.data.modules.list)));
+				this.blocks[index].addTab('DB Queries', queriesTab);
+			}
+			else
+			{
+				this.blocks[index].addTab('DB Queries', new Tab());
+			}
+
+			if(data.data.routes.list.length){
+				this.blocks[index].addTab('Routes', new Tab(new Table([
+					{name: 'Route', identifier: 'name'},
+					{name: 'Current', identifier: 'current', styles: {width: '100px'}, callback: function(value){ return value ? 'yes' : ''; }},
+				], data.data.routes.list)));
+			}
+			else
+			{
+				this.blocks[index].addTab('Routes', new Tab());
+			}
+
+			if(data.data.files.list.length){
+				this.blocks[index].addTab('Files', new Tab(new Table([
+					{name: 'Path', identifier: 'name'},
+					{name: 'Lines', identifier: 'lines', styles: {width: '100px'}},
+					{name: 'Size', identifier: 'size', styles: {width: '100px'}, callback: function(value){ return (value / 1024).round(2) + ' KiB'; }},
+				], data.data.files.list)));
+			}
+			else
+			{
+				this.blocks[index].addTab('Files', new Tab());
+			}
+
+			if(data.data.files.list.length){
+				this.blocks[index].addTab('Modules', new Tab(new Table([
+					{name: 'Name', identifier: 'name', styles: {width: '150px'}},
+					{name: 'Path', identifier: 'path'}
+				], data.data.modules.list)));
+			}
+			else
+			{
+				this.blocks[index].addTab('Modules', new Tab());
+			}
 		},
 
 		createRow: function(data, index){
@@ -265,16 +314,15 @@ document.addEvent('domready', function(){
 				e.stop();
 				if(this.hasClass('selected')) return;
 
-				this.getParent('table').getElements('td.selected').removeClass('selected');
-				this.addClass('selected');
-
-				//$this.content.addClass('split-view-open');
 				if($this.activeBlock){
 					$this.blocks[$this.activeBlock].hide();
 				}
 
 				$this.activeBlock = this.getParent('tr').retrieve('index');
 				$this.blocks[$this.activeBlock].show();
+
+				this.getParent('table').getElements('td.selected').removeClass('selected');
+				this.addClass('selected');
 			});
 
 			return this;
