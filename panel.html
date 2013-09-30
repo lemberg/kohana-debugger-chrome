@@ -1,37 +1,70 @@
-<html>
+<!doctype html>
+<html lang="en-US">
 	<head>
-		<title>Kohana DebugTool Panel</title>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/panel.css">
 		<script src="js/mootools-core.js"></script>
-		<script src="js/config.js"></script>
 		<script src="js/panel.js"></script>
-		<script src="js/panel_ui.js"></script>
-		<link href="css/panel.css" type="text/css" rel="stylesheet" />
 	</head>
 	<body>
-		<div id="data-block">
-			<div id='requests'>
-				<ul class='menu'></ul>
+		<div class="split-view">
+			<div class="split-view-sidebar">
+				<table id="requests-grid" class="data-grid">
+					<tr>
+						<th class="header-path">
+							Path
+						</th>
+						<th class="header-method">
+							Method
+						</th>
+						<th class="header-status">
+							Status
+						</th>
+						<th class="header-type">
+							Type
+						</th>
+						<th>
+							Memory
+						</th>
+						<th>
+							Time
+						</th>
+					</tr>
+					<tr class="template hide">
+						<td class="td-pointer">
+							<a href="#" class="close">x</a>
+							<a class="data-path" href=""></a>
+						</td>
+						<td class="data-method"></td>
+						<td>
+							<span class="data-status"></span>
+							<div class="data-status-text network-cell-subtitle"></div>
+						</td>
+						<td class="data-type"></td>
+						<td class="data-memory"></td>
+						<td class="data-time"></td>
+					</tr>
+				</table>
 			</div>
-			<div id="requests-info-wrapper">
-				<div class='request-info clone' style="display: none;">
-					<div class="menu-wrapper">
-						<ul class="menu"></ul>
+			<div class="right-box template hide">
+				<div class="menu-box">
+					<div class="header">
+						<a href="" class="close">x</a>
 					</div>
-					<div class="content">
-						<div class="benchmarks item-block"></div>
-						<div class="queries item-block" style="display: none;"></div>
-						<div class="vars item-block" style="display: none;"></div>
-						<div class="files item-block" style="display: none;"></div>
-						<div class="modules item-block" style="display: none;"></div>
-						<div class="routes item-block" style="display: none;"></div>
-						<div class="customs item-block" style="display: none;"></div>
-						<div class="logs item-block" style="display: none;"></div>
+					<div class="list-box">
+						<ul>
+						</ul>
+					</div>
+				</div>
+				<div class="ov_hidden tab template hide">
+					<div class="header">
+					</div>
+					<div class="text">
+						<div class="no_data">There is no data for this tab</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id="errors-block" class="nodata" style="display:none;">
-			No Data for this page
 		</div>
 	</body>
 </html>

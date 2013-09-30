@@ -14,3 +14,7 @@ chrome.extension.onConnect.addListener(function (port) {
 		port.postMessage({tabId: sender.tab.id, content: message});
 	});
 });
+
+chrome.devtools.network.addRequestHeaders({
+    "X-Kohana-Debugger-Version": "0.1"
+});
