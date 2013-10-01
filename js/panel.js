@@ -52,12 +52,14 @@ document.addEvent('domready', function(){
 				this.open();
 			}
 
+			var $this = this;
+
 			this.header.addEvent('click', function(e){
 				e.stop();
 				if(this.hasClass('open')){
-					this.close();
+					$this.close();
 				} else {
-					this.open();
+					$this.open();
 				}
 			});
 		},
@@ -122,6 +124,8 @@ document.addEvent('domready', function(){
 			this.tabs[this.name(name)].show();
 			this.elements.menu.getElement('a[data-button="' + this.name(name) + '"]').addClass('active');
 
+			Block.activeTab = this.name(name);
+
 			return this;
 		},
 
@@ -132,6 +136,7 @@ document.addEvent('domready', function(){
 		show: function(){
 			this.content.getParent('.split-view').addClass('split-view-open');
 			this.content.removeClass('hide');
+			this.setActive(Block.activeTab);
 			this.fireEvent('show');
 
 			return this;
@@ -145,6 +150,8 @@ document.addEvent('domready', function(){
 			return this;
 		}
 	});
+
+	Block.activeTab = 'Benchmarks';
 
 	var Tab = new Class({
 		content: null,
@@ -203,6 +210,9 @@ document.addEvent('domready', function(){
 		initialize: function(){
 			this.content = document.getElement('.split-view');
 			this.elements.requests = this.content.getElement('#requests-grid');
+			window.addEvent('resize', function(){
+				this.content.getElement('.table-wrapper').setStyle('height', window.getSize().y - 42);
+			}.bind(this));
 		},
 
 		push: function(request){
@@ -214,7 +224,7 @@ document.addEvent('domready', function(){
 			this.createRow(data, index);
 			this.addBlock(data, index);
 
-			this.blocks[index].setActive('Banchmarks');
+			this.blocks[index].setActive(Block.activeTab);
 		},
 
 		addBlock: function(data, index){
@@ -231,7 +241,7 @@ document.addEvent('domready', function(){
 				{name: 'Total Memory', identifier: 'total_memory', callback: function(value){ return (value / 1024).round(2) + ' KiB'; }},
 			], [data.data.benchmarks.application], 'Application', true));
 
-			Object.each(data.data.benchmarks, function(stats, name){ console.log(stats, typeOf(stats), name, name == 'application');
+			Object.each(data.data.benchmarks, function(stats, name){
 				if(name == 'application') return;
 				benchmarksTab.add(new OpenableTable([
 					{name: 'Name', identifier: 'name'},
@@ -241,12 +251,12 @@ document.addEvent('domready', function(){
 				], stats, name, true));
 			});
 
-			this.blocks[index].addTab('Banchmarks', benchmarksTab);
+			this.blocks[index].addTab('Benchmarks', benchmarksTab);
 
 			if(data.data.queries.count){
 				var queriesTab = new Tab();
 
-				Object.each(data.data.queries.data, function(database, name){console.log(database, name);
+				Object.each(data.data.queries.data, function(database, name){
 					queriesTab.add(new OpenableTable([
 						{name: 'Query', identifier: 'name'},
 						{name: 'Time', identifier: 'time', styles: {width: '100px'}, callback: function(value){ return value.round(4) + ' s'; }},

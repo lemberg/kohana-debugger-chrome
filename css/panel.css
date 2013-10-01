@@ -8,8 +8,30 @@ table{
 	border-spacing: 0;
 	border-collapse: collapse;
 	width: 100%;
+	width: 100%;
 	color: #222222;
 	font-size: 11px;
+}
+.split-view-open div.table-wrapper {
+	margin-top: 41px;
+	overflow: auto;
+}
+table.data-grid-head{
+  display: none;
+}
+.split-view-open table.data-grid-head{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  display: table;
+  margin-top: 0;
+}
+.split-view-open table.data-grid thead{
+	display: none;
+}
+table.data-grid tbody tr:nth-child(odd) {
+	background-color: rgba(0, 0, 0, 0.05);
 }
 table.data-grid th {
 	text-align: left;
@@ -44,8 +66,8 @@ table.data-grid td:first-child{
 	background-color: transparent;
 }
 table.data-grid {
-	background-size: 1px 82px;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.05)), to(rgba(0, 0, 0, 0.05)));
+	/* background-size: 1px 82px;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.05)), to(rgba(0, 0, 0, 0.05))); */
 }
 table.data-grid th .network-header-subtitle,
 table.data-grid td .network-cell-subtitle{
@@ -311,8 +333,10 @@ li .header-count{
 /*------------------*/
 .accordion .desc{
 	display: none;
-	padding: 10px;
 	border-bottom: 1px solid #999;
+}
+.accordion .desc p{
+  margin: 10px;
 }
 .accordion .title{
 	padding: 2px 4px;

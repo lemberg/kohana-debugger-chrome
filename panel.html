@@ -10,46 +10,55 @@
 	<body>
 		<div class="split-view">
 			<div class="split-view-sidebar">
-				<table id="requests-grid" class="data-grid">
-					<thead>
-						<tr>
-							<th class="header-path">
-								Path
-							</th>
-							<th class="header-method">
-								Method
-							</th>
-							<th class="header-status">
-								Status
-							</th>
-							<th class="header-type">
-								Type
-							</th>
-							<th>
-								Memory
-							</th>
-							<th>
-								Time
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="template hide">
-							<td class="td-pointer">
-								<a href="#" class="close">x</a>
-								<a class="data-path" href=""></a>
-							</td>
-							<td class="data-method"></td>
-							<td>
-								<span class="data-status"></span>
-								<div class="data-status-text network-cell-subtitle"></div>
-							</td>
-							<td class="data-type"></td>
-							<td class="data-memory"></td>
-							<td class="data-time"></td>
-						</tr>
-					</tbody>
+				<table class="data-grid data-grid-head">
+					<tr>
+						<th>
+							Path
+						</th>
+					</tr>
 				</table>
+				<div class="table-wrapper">
+					<table id="requests-grid" class="data-grid">
+						<thead>
+							<tr>
+								<th class="header-path">
+									Path
+								</th>
+								<th class="header-method">
+									Method
+								</th>
+								<th class="header-status">
+									Status
+								</th>
+								<th class="header-type">
+									Type
+								</th>
+								<th>
+									Memory
+								</th>
+								<th>
+									Time
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="template hide">
+								<td class="td-pointer">
+									<!--a href="#" class="close">x</a-->
+									<a class="data-path" href=""></a>
+								</td>
+								<td class="data-method"></td>
+								<td>
+									<span class="data-status"></span>
+									<div class="data-status-text network-cell-subtitle"></div>
+								</td>
+								<td class="data-type"></td>
+								<td class="data-memory"></td>
+								<td class="data-time"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<div class="right-box template hide">
 				<div class="menu-box">
