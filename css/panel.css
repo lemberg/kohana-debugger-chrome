@@ -17,15 +17,15 @@ table{
 	overflow: auto;
 }
 table.data-grid-head{
-  display: none;
+	display: none;
 }
 .split-view-open table.data-grid-head{
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  display: table;
-  margin-top: 0;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	display: table;
+	margin-top: 0;
 }
 .split-view-open table.data-grid thead{
 	display: none;
@@ -336,7 +336,7 @@ li .header-count{
 	border-bottom: 1px solid #999;
 }
 .accordion .desc p{
-  margin: 10px;
+	margin: 10px;
 }
 .accordion .title{
 	padding: 2px 4px;
